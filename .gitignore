@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Environment
+.env
+*.env
+
+# Home Assistant runtime data
+home-assistant/config/.storage/
+home-assistant/config/home-assistant_v2.db*
+home-assistant/config/home-assistant.log*
+home-assistant/config/secrets.yaml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
