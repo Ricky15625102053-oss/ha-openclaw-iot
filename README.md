@@ -10,5 +10,37 @@
 
 ## 当前状态
 
-项目初始化阶段。
+当前已经准备好 Home Assistant 的 Docker Compose 部署文件和服务器启动脚本。
 
+## 目录结构
+
+```text
+ha-openclaw-iot/
+  docs/
+    architecture.md
+    deployment.md
+    device-integration.md
+    demo-scenes.md
+    home-assistant-installation-notes.md
+  home-assistant/
+    compose.yaml
+    config/
+  scripts/
+    bootstrap-home-assistant.sh
+```
+
+## 下一步
+
+在阿里云服务器中确认安全组已开放 `8123` 后，登录服务器执行：
+
+```bash
+bash scripts/bootstrap-home-assistant.sh
+```
+
+部署成功后访问：
+
+```text
+http://123.57.64.73:8123
+```
+
+注意：Home Assistant Token、服务器密码、OpenClaw API Key 等敏感信息不要提交到 GitHub。
