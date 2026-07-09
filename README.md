@@ -10,7 +10,13 @@
 
 ## 当前状态
 
-当前已经准备好 Home Assistant 的 Docker Compose 部署文件和服务器启动脚本。
+当前已经完成 Home Assistant 服务器部署、首次初始化和 REST API Token 生成。
+
+已验证：
+
+- `homeassistant` 容器可运行。
+- `8123` 端口可访问。
+- Home Assistant `/api/states` 能返回实体 JSON。
 
 ## 目录结构
 
@@ -22,25 +28,25 @@ ha-openclaw-iot/
     device-integration.md
     demo-scenes.md
     home-assistant-installation-notes.md
+    openclaw-ha-api.md
   home-assistant/
     compose.yaml
     config/
   scripts/
     bootstrap-home-assistant.sh
+    check-ha-api.py
 ```
 
 ## 下一步
 
-在阿里云服务器中确认安全组已开放 `8123` 后，登录服务器执行：
+在阿里云服务器中使用 HA Token 验证 API：
 
 ```bash
-bash scripts/bootstrap-home-assistant.sh
+export HA_URL="http://localhost:8123"
+export HA_TOKEN="paste-token-here"
+python3 scripts/check-ha-api.py
 ```
 
-部署成功后访问：
-
-```text
-http://123.57.64.73:8123
-```
+验证成功后，继续开发 OpenClaw 到 Home Assistant REST API 的最小控制链路。
 
 注意：Home Assistant Token、服务器密码、OpenClaw API Key 等敏感信息不要提交到 GitHub。
