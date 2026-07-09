@@ -99,3 +99,54 @@ python3 scripts/check-ha-api.py
 1. 选择一个可控实体或创建 MQTT 虚拟实体。
 2. 编写最小 OpenClaw HA Skill：自然语言 -> 实体 ID -> HA 服务调用。
 3. 增加安全规则，先禁止 `lock`、关键 `switch`、`alarm_control_panel` 等高风险 domain。
+
+## 创建第一个演示实体
+
+如果当前还没有真实智能设备，可以先创建一个 Home Assistant 虚拟开关：
+
+```text
+input_boolean.openclaw_demo_light
+```
+
+它的作用是模拟“灯”的开关状态，用来验证 OpenClaw 到 HA API 的完整控制链路。
+
+服务器执行：
+
+```bash
+cd /opt/ha-openclaw-iot
+curl -fsSL https://raw.githubusercontent.com/Ricky15625102053-oss/ha-openclaw-iot/main/scripts/install-demo-entities.sh -o scripts/install-demo-entities.sh
+bash scripts/install-demo-entities.sh
+```
+
+脚本会做四件事：
+
+1. 备份 `configuration.yaml`。
+2. 追加 `input_boolean.openclaw_demo_light`。
+3. 重启 Home Assistant 容器。
+4. 等待 Home Assistant Web 页面恢复响应。
+
+执行完成后，使用 Token 检查实体是否存在：
+
+```bash
+curl -sS -H "Authorization: Bearer $HA_TOKEN" \
+  -H "Content-Type: application/json" \
+  "$HA_URL/api/states/input_boolean.openclaw_demo_light"
+```
+
+测试打开虚拟灯：
+
+```bash
+curl -sS -X POST -H "Authorization: Bearer $HA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"entity_id":"input_boolean.openclaw_demo_light"}' \
+  "$HA_URL/api/services/input_boolean/turn_on"
+```
+
+测试关闭虚拟灯：
+
+```bash
+curl -sS -X POST -H "Authorization: Bearer $HA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"entity_id":"input_boolean.openclaw_demo_light"}' \
+  "$HA_URL/api/services/input_boolean/turn_off"
+```

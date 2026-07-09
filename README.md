@@ -35,6 +35,7 @@ ha-openclaw-iot/
   scripts/
     bootstrap-home-assistant.sh
     check-ha-api.py
+    install-demo-entities.sh
 ```
 
 ## 下一步
@@ -48,5 +49,11 @@ python3 scripts/check-ha-api.py
 ```
 
 验证成功后，继续开发 OpenClaw 到 Home Assistant REST API 的最小控制链路。
+
+如果暂时没有真实设备，可以先创建演示实体：
+
+```bash
+bash scripts/install-demo-entities.sh
+```
 
 注意：Home Assistant Token、服务器密码、OpenClaw API Key 等敏感信息不要提交到 GitHub。
