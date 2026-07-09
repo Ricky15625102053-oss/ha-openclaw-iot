@@ -22,6 +22,7 @@ ha-openclaw-iot/
     device-integration.md
     demo-scenes.md
     home-assistant-installation-notes.md
+    operation-recording-rules.md
   home-assistant/
     compose.yaml
     config/
@@ -44,3 +45,13 @@ http://123.57.64.73:8123
 ```
 
 注意：Home Assistant Token、服务器密码、OpenClaw API Key 等敏感信息不要提交到 GitHub。
+
+## 开发操作记录要求
+
+本项目要求每次操作都记录到 Obsidian，并说明为什么做、目的是什么、具体怎么做、结果是什么。
+
+详细规范见：
+
+```text
+docs/operation-recording-rules.md
+```
