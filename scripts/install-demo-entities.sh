@@ -32,6 +32,18 @@ input_boolean:
   openclaw_demo_light:
     name: OpenClaw Demo Light
     icon: mdi:lightbulb
+  huawei_fan:
+    name: Huawei Demo Fan
+    icon: mdi:fan
+
+input_number:
+  huawei_ac_temperature:
+    name: Huawei AC Target Temperature
+    min: 16
+    max: 30
+    step: 1
+    unit_of_measurement: "°C"
+    icon: mdi:air-conditioner
 # END ha-openclaw demo entities
 YAML
 fi
@@ -66,6 +78,8 @@ Demo entity setup completed.
 
 Expected entity:
   input_boolean.openclaw_demo_light
+  input_boolean.huawei_fan
+  input_number.huawei_ac_temperature
 
 Next API checks:
   curl -sS -H "Authorization: Bearer $HA_TOKEN" \

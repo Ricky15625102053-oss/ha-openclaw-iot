@@ -36,6 +36,7 @@ ha-openclaw-iot/
     bootstrap-home-assistant.sh
     check-ha-api.py
     install-demo-entities.sh
+    local-asr-text-demo.py
     openclaw-ha-demo.py
 ```
 
@@ -62,6 +63,12 @@ bash scripts/install-demo-entities.sh
 ```bash
 python3 scripts/openclaw-ha-demo.py "打开演示灯"
 python3 scripts/openclaw-ha-demo.py "关闭演示灯"
+```
+
+本地文字输入模拟语音识别结果：
+
+```bash
+python3 scripts/local-asr-text-demo.py
 ```
 
 注意：Home Assistant Token、服务器密码、OpenClaw API Key 等敏感信息不要提交到 GitHub。
