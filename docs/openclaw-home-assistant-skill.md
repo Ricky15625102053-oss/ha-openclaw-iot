@@ -52,6 +52,20 @@ export HA_TOKEN="your-home-assistant-token"
 
 Do not store the token in GitHub or this repository.
 
+Use a single-line token value. Do not put the closing quote on a later line. If you want to avoid displaying the token in the terminal, use:
+
+```bash
+read -r -s -p "HA token: " HA_TOKEN
+echo
+export HA_TOKEN
+```
+
+If the token accidentally contains a newline, Python HTTP clients may fail with:
+
+```text
+ValueError: Invalid header value b'Bearer ...\n'
+```
+
 ## Demo Test Commands
 
 First confirm the project script still works:

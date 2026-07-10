@@ -13,6 +13,8 @@ import urllib.request
 
 HA_URL = os.environ.get("HA_URL", "http://localhost:8123").rstrip("/")
 HA_TOKEN = os.environ.get("HA_TOKEN")
+if HA_TOKEN is not None:
+    HA_TOKEN = HA_TOKEN.strip()
 
 STATE_ENTITIES = [
     "input_boolean.huawei_fan",
