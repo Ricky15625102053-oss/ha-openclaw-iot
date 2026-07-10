@@ -2,6 +2,20 @@
 
 基于 Home Assistant 与 OpenClaw 的第三方生态智能家居互联互通演示项目。
 
+## OpenClaw Skill
+
+This project includes a local OpenClaw skill draft for safe Home Assistant demo control:
+
+```text
+skills/home-assistant-control/SKILL.md
+```
+
+Install and usage notes:
+
+```text
+docs/openclaw-home-assistant-skill.md
+```
+
 ## 项目目标
 
 - 使用 Home Assistant 统一接入多品牌、多协议智能家居设备。
