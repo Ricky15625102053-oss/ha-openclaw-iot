@@ -150,3 +150,48 @@ curl -sS -X POST -H "Authorization: Bearer $HA_TOKEN" \
   -d '{"entity_id":"input_boolean.openclaw_demo_light"}' \
   "$HA_URL/api/services/input_boolean/turn_off"
 ```
+
+## 最小 OpenClaw 控制原型
+
+项目提供一个最小自然语言控制脚本：
+
+```text
+scripts/openclaw-ha-demo.py
+```
+
+它的作用是演示 OpenClaw Skill 的核心链路：
+
+```text
+自然语言命令
+  -> 识别设备和动作
+  -> 安全检查
+  -> 调用 HA REST API
+  -> 读取并返回最终状态
+```
+
+当前支持的命令示例：
+
+```text
+打开演示灯
+关闭演示灯
+turn on demo light
+turn off demo light
+```
+
+运行方式：
+
+```bash
+cd /opt/ha-openclaw-iot
+export HA_URL="http://localhost:8123"
+export HA_TOKEN="paste-token-here"
+python3 scripts/openclaw-ha-demo.py "打开演示灯"
+python3 scripts/openclaw-ha-demo.py "关闭演示灯"
+```
+
+脚本当前只支持一个安全的虚拟实体：
+
+```text
+input_boolean.openclaw_demo_light
+```
+
+这样做的原因是先验证最小闭环，避免一开始就接入门锁、插座、电器等高风险实体。

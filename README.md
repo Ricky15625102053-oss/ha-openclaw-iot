@@ -36,6 +36,7 @@ ha-openclaw-iot/
     bootstrap-home-assistant.sh
     check-ha-api.py
     install-demo-entities.sh
+    openclaw-ha-demo.py
 ```
 
 ## 下一步
@@ -54,6 +55,13 @@ python3 scripts/check-ha-api.py
 
 ```bash
 bash scripts/install-demo-entities.sh
+```
+
+然后测试最小自然语言控制原型：
+
+```bash
+python3 scripts/openclaw-ha-demo.py "打开演示灯"
+python3 scripts/openclaw-ha-demo.py "关闭演示灯"
 ```
 
 注意：Home Assistant Token、服务器密码、OpenClaw API Key 等敏感信息不要提交到 GitHub。
