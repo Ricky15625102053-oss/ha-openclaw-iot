@@ -22,10 +22,16 @@ cp "$CONFIG_FILE" "$BACKUP_FILE"
 echo "Backup created: $BACKUP_FILE"
 
 echo "[3/5] Adding demo entities if missing"
-if grep -Fq "$MARKER_BEGIN" "$CONFIG_FILE"; then
-  echo "Demo entities block already exists. No duplicate block added."
-else
-  cat >> "$CONFIG_FILE" <<'YAML'
+TMP_CONFIG="$(mktemp)"
+awk -v begin="$MARKER_BEGIN" -v end="$MARKER_END" '
+  $0 == begin { skip = 1; next }
+  $0 == end { skip = 0; next }
+  skip != 1 { print }
+' "$CONFIG_FILE" > "$TMP_CONFIG"
+cat "$TMP_CONFIG" > "$CONFIG_FILE"
+rm -f "$TMP_CONFIG"
+
+cat >> "$CONFIG_FILE" <<'YAML'
 
 # BEGIN ha-openclaw demo entities
 input_boolean:
@@ -46,7 +52,7 @@ input_number:
     icon: mdi:air-conditioner
 # END ha-openclaw demo entities
 YAML
-fi
+echo "Demo entities block refreshed."
 
 echo "[4/5] Restarting Home Assistant container"
 if docker ps --format '{{.Names}}' | grep -Fxq homeassistant; then

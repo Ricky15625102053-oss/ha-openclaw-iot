@@ -14,6 +14,11 @@ import urllib.request
 HA_URL = os.environ.get("HA_URL", "http://localhost:8123").rstrip("/")
 HA_TOKEN = os.environ.get("HA_TOKEN")
 
+STATE_ENTITIES = [
+    "input_boolean.huawei_fan",
+    "input_number.huawei_ac_temperature",
+]
+
 
 def ha_request(path: str, payload: dict[str, object] | None = None):
     data = None
@@ -49,17 +54,27 @@ def parse_temperature(text: str) -> int | None:
     return value
 
 
-def plan_actions(text: str) -> list[dict[str, object]]:
-    normalized = text.strip().lower()
-    actions: list[dict[str, object]] = []
+def contains_any(text: str, words: list[str]) -> bool:
+    return any(word in text for word in words)
 
-    mentions_ac = "空调" in normalized or "ac" in normalized
-    mentions_fan = "风扇" in normalized or "fan" in normalized
+
+def plan_actions(text: str) -> list[dict[str, object]]:
+    normalized = text.strip().lower().replace("　", " ")
+    actions: list[dict[str, object]] = []
+    temperature = parse_temperature(normalized)
+
+    mentions_ac = (
+        "空调" in normalized
+        or "ac" in normalized
+        or temperature is not None
+        or contains_any(normalized, ["温度", "制冷", "太热", "有点热", "太冷"])
+    )
+    mentions_fan = "风扇" in normalized or "fan" in normalized or "吹风" in normalized
 
     if not mentions_ac and not mentions_fan:
-        raise ValueError("没有识别到设备。当前 demo 支持：华为空调、华为风扇。")
+        raise ValueError("没有识别到设备。当前 demo 支持：华为空调、华为风扇；也可以直接说温度。")
 
-    if any(word in normalized for word in ["关闭", "关掉", "关上", "turn off"]):
+    if contains_any(normalized, ["关闭", "关掉", "关上", "停掉", "停止", "turn off"]):
         if mentions_fan:
             actions.append(
                 {
@@ -85,7 +100,7 @@ def plan_actions(text: str) -> list[dict[str, object]]:
             )
         return actions
 
-    if any(word in normalized for word in ["打开", "开启", "启动", "turn on"]):
+    if contains_any(normalized, ["打开", "开启", "启动", "开一下", "turn on"]):
         if mentions_fan:
             actions.append(
                 {
@@ -97,7 +112,7 @@ def plan_actions(text: str) -> list[dict[str, object]]:
                 }
             )
         if mentions_ac:
-            temperature = parse_temperature(normalized) or 26
+            temperature = temperature or 26
             actions.append(
                 {
                     "label": f"设置华为空调目标温度为 {temperature} 度",
@@ -112,7 +127,6 @@ def plan_actions(text: str) -> list[dict[str, object]]:
             )
         return actions
 
-    temperature = parse_temperature(normalized)
     if mentions_ac and temperature is not None:
         actions.append(
             {
@@ -128,7 +142,37 @@ def plan_actions(text: str) -> list[dict[str, object]]:
         )
         return actions
 
-    raise ValueError("没有识别到动作。示例：打开华为风扇、把华为空调调到 24 度。")
+    if contains_any(normalized, ["太热", "有点热", "热了"]):
+        actions.append(
+            {
+                "label": "根据偏热表达，将华为空调目标温度设为 24 度",
+                "domain": "input_number",
+                "service": "set_value",
+                "entity_id": "input_number.huawei_ac_temperature",
+                "payload": {
+                    "entity_id": "input_number.huawei_ac_temperature",
+                    "value": 24,
+                },
+            }
+        )
+        return actions
+
+    if contains_any(normalized, ["太冷", "有点冷", "冷了"]):
+        actions.append(
+            {
+                "label": "根据偏冷表达，将华为空调目标温度设为 26 度",
+                "domain": "input_number",
+                "service": "set_value",
+                "entity_id": "input_number.huawei_ac_temperature",
+                "payload": {
+                    "entity_id": "input_number.huawei_ac_temperature",
+                    "value": 26,
+                },
+            }
+        )
+        return actions
+
+    raise ValueError("没有识别到动作。示例：打开华为风扇、把温度调到 24 度、太热了。")
 
 
 def execute_action(action: dict[str, object]):
@@ -139,12 +183,23 @@ def execute_action(action: dict[str, object]):
 
 
 def print_states() -> None:
-    for entity_id in [
-        "input_boolean.huawei_fan",
-        "input_number.huawei_ac_temperature",
-    ]:
-        state = ha_request(f"/api/states/{entity_id}")
+    for entity_id in STATE_ENTITIES:
+        try:
+            state = ha_request(f"/api/states/{entity_id}")
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                print(f"- {entity_id}: 未找到，请先重新执行 scripts/install-demo-entities.sh")
+                continue
+            raise
         print(f"- {entity_id}: {state.get('state')}")
+
+
+def read_asr_text() -> str:
+    print("ASR文本> ", end="", flush=True)
+    raw = sys.stdin.buffer.readline()
+    if not raw:
+        raise EOFError
+    return raw.decode("utf-8", errors="replace").strip()
 
 
 def handle_text(text: str) -> None:
@@ -174,12 +229,12 @@ def main() -> int:
         return 0
 
     print("本地文字输入 demo：模拟麦克风 ASR 识别完成后的文本。")
-    print("示例：打开华为风扇 / 把华为空调调到 24 度 / 打开华为空调和风扇")
+    print("示例：打开华为风扇 / 把华为空调调到 24 度 / 温度跳到20度 / 太热了")
     print("输入 exit 退出。\n")
 
     while True:
         try:
-            text = input("ASR文本> ").strip()
+            text = read_asr_text()
         except EOFError:
             print()
             return 0

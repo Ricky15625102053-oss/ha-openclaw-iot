@@ -71,4 +71,13 @@ python3 scripts/openclaw-ha-demo.py "关闭演示灯"
 python3 scripts/local-asr-text-demo.py
 ```
 
+示例输入：
+
+```text
+打开华为风扇
+把华为空调调到 24 度
+温度跳到20度
+太热了
+```
+
 注意：Home Assistant Token、服务器密码、OpenClaw API Key 等敏感信息不要提交到 GitHub。
