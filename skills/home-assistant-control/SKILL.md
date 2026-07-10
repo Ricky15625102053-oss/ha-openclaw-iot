@@ -43,16 +43,16 @@ From the project root on the server:
 
 ```bash
 cd /opt/ha-openclaw-iot
-python3 scripts/local-asr-text-demo.py "<natural language command>"
+scripts/run-ha-demo-command.sh "<natural language command>"
 ```
 
 Examples:
 
 ```bash
-python3 scripts/local-asr-text-demo.py "turn on fan"
-python3 scripts/local-asr-text-demo.py "turn off fan"
-python3 scripts/local-asr-text-demo.py "set ac to 24c"
-python3 scripts/local-asr-text-demo.py "set temperature to 20c"
+scripts/run-ha-demo-command.sh "turn on fan"
+scripts/run-ha-demo-command.sh "turn off fan"
+scripts/run-ha-demo-command.sh "set ac to 24c"
+scripts/run-ha-demo-command.sh "set temperature to 20c"
 ```
 
 ## Before Executing
@@ -66,6 +66,14 @@ python3 scripts/local-asr-text-demo.py "set temperature to 20c"
 cd /opt/ha-openclaw-iot
 bash scripts/install-demo-entities.sh
 ```
+
+If `HA_TOKEN` is missing, ask the user to create the root-only local env file:
+
+```bash
+/root/.ha-openclaw.env
+```
+
+Do not ask the user to paste the token into chat.
 
 ## Status Checks
 

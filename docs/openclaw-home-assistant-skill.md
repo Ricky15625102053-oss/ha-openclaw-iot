@@ -43,7 +43,7 @@ openclaw gateway status
 
 ## Required Runtime Variables
 
-Before asking OpenClaw to control Home Assistant, the runtime must have:
+Before asking OpenClaw to control Home Assistant, the runtime must have `HA_URL` and `HA_TOKEN`. For manual terminal tests you can export them:
 
 ```bash
 export HA_URL="http://localhost:8123"
@@ -66,15 +66,32 @@ If the token accidentally contains a newline, Python HTTP clients may fail with:
 ValueError: Invalid header value b'Bearer ...\n'
 ```
 
+For OpenClaw Gateway execution, create a root-only local env file on the server. This file is not part of Git:
+
+```bash
+export HA_URL="http://localhost:8123"
+unset HA_TOKEN
+read -r -s -p "New HA token: " HA_TOKEN
+echo
+printf 'HA_URL=%q\nHA_TOKEN=%q\n' "$HA_URL" "$HA_TOKEN" > /root/.ha-openclaw.env
+chmod 600 /root/.ha-openclaw.env
+```
+
+The project wrapper script reads that local file:
+
+```bash
+scripts/run-ha-demo-command.sh "turn on fan"
+```
+
 ## Demo Test Commands
 
 First confirm the project script still works:
 
 ```bash
 cd /opt/ha-openclaw-iot
-python3 scripts/local-asr-text-demo.py "turn on fan"
-python3 scripts/local-asr-text-demo.py "set temperature to 20c"
-python3 scripts/local-asr-text-demo.py "turn off fan"
+scripts/run-ha-demo-command.sh "turn on fan"
+scripts/run-ha-demo-command.sh "set temperature to 20c"
+scripts/run-ha-demo-command.sh "turn off fan"
 ```
 
 Then start a new OpenClaw session and ask it to use the Home Assistant control skill for safe demo entities only.
