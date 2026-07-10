@@ -58,9 +58,9 @@ First confirm the project script still works:
 
 ```bash
 cd /opt/ha-openclaw-iot
-python3 scripts/local-asr-text-demo.py "打开华为风扇"
-python3 scripts/local-asr-text-demo.py "温度跳到20度"
-python3 scripts/local-asr-text-demo.py "关闭华为风扇"
+python3 scripts/local-asr-text-demo.py "turn on fan"
+python3 scripts/local-asr-text-demo.py "set temperature to 20c"
+python3 scripts/local-asr-text-demo.py "turn off fan"
 ```
 
 Then start a new OpenClaw session and ask it to use the Home Assistant control skill for safe demo entities only.

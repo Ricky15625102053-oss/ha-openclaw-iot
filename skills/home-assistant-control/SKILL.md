@@ -3,7 +3,7 @@ name: home-assistant-control
 description: Safely control the HA OpenClaw demo Home Assistant entities through the local project scripts.
 metadata:
   openclaw:
-    emoji: "🏠"
+    emoji: "HA"
     requires:
       bins:
         - python3
@@ -49,11 +49,10 @@ python3 scripts/local-asr-text-demo.py "<natural language command>"
 Examples:
 
 ```bash
-python3 scripts/local-asr-text-demo.py "打开华为风扇"
-python3 scripts/local-asr-text-demo.py "关闭华为风扇"
-python3 scripts/local-asr-text-demo.py "把华为空调调到24度"
-python3 scripts/local-asr-text-demo.py "温度跳到20度"
-python3 scripts/local-asr-text-demo.py "太热了"
+python3 scripts/local-asr-text-demo.py "turn on fan"
+python3 scripts/local-asr-text-demo.py "turn off fan"
+python3 scripts/local-asr-text-demo.py "set ac to 24c"
+python3 scripts/local-asr-text-demo.py "set temperature to 20c"
 ```
 
 ## Before Executing
